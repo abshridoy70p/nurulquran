@@ -1,445 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madrasa Management System</title>
+    <title>নুরুল কুরআন কওমি মাদরাসা</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'SolaimanLipi', Arial, sans-serif !important;
             background-color: #f5f5f5;
-            color: var(--dark-color);
         }
-        
-        .navbar {
-            background-color: var(--primary-color);
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
+        .header {
+            background-color: #2c7be5;
             color: white;
-        }
-        
-        .btn-primary {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-        
-        .btn-danger {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-        }
-        
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
             margin-bottom: 20px;
-            border: none;
+            border-radius: 0 0 10px 10px;
         }
-        
-        .card-header {
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
+        .btn-primary {
+            background-color: #2c7be5;
+            border-color: #2c7be5;
         }
-        
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-success {
+            background-color: #00a854;
+            border-color: #00a854;
+        }
+        .btn-danger {
+            background-color: #f46a6a;
+            border-color: #f46a6a;
+        }
+        .btn-warning {
+            background-color: #f7b924;
+            border-color: #f7b924;
+        }
         .list-group-item {
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .page-title {
+            color: #2c7be5;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2c7be5;
+            padding-bottom: 10px;
+        }
+        .back-btn {
+            margin-bottom: 15px;
+        }
+        .search-box {
+            margin-bottom: 15px;
+        }
+        .student-card {
+            cursor: pointer;
             transition: all 0.3s;
         }
-        
-        .list-group-item:hover {
-            background-color: var(--light-color);
-            transform: translateX(5px);
+        .student-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
-        .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        .unpaid-badge {
+            font-size: 14px;
         }
-        
-        .page {
-            display: none;
-        }
-        
-        .page.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .badge-paid {
-            background-color: #2ecc71;
-        }
-        
-        .badge-unpaid {
-            background-color: #e74c3c;
-        }
-        
-        .search-container {
-            position: relative;
-        }
-        
-        .search-results {
-            position: absolute;
-            width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 0 0 5px 5px;
-            display: none;
-        }
-        
-        .search-result-item {
-            padding: 8px 15px;
-            cursor: pointer;
-        }
-        
-        .search-result-item:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .offline-notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1050;
-            display: none;
-        }
-        
-        .student-item {
-            position: relative;
-        }
-        
-        .student-actions {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        
-        @media (max-width: 768px) {
-            .student-actions {
-                position: static;
-                transform: none;
-                margin-top: 10px;
-                text-align: right;
-            }
+        @font-face {
+            font-family: 'SolaimanLipi';
+            src: url('https://cdn.rawgit.com/muttaqin/solaimanlipi/7c1c8213/SolaimanLipi.ttf') format('truetype');
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="#" onclick="showPage('home-page')">Madrasa Management</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" onclick="showPage('home-page')">Home</a>
-                    </li>
-                </ul>
-            </div>
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="header text-center">
+            <h1>নুরুল কুরআন কওমি মাদরাসা</h1>
         </div>
-    </nav>
 
-    <!-- Offline Notification -->
-    <div class="offline-notification alert alert-warning alert-dismissible fade show" role="alert">
-        You are currently offline. Data will be saved locally and synced when you're back online.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <!-- Main Container -->
-    <div class="container mb-5">
         <!-- Home Page -->
-        <div id="home-page" class="page active">
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h2 class="text-center mb-4">Madrasa Dashboard</h2>
-                </div>
-            </div>
-            
+        <div id="home-page">
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <button class="btn btn-primary w-100 py-3" onclick="showPage('class-page'); setCurrentClass('shishu')">
-                        <i class="fas fa-child me-2"></i> শিশু জামাত
-                    </button>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <button class="btn btn-primary w-100 py-3" onclick="showPage('class-page'); setCurrentClass('first')">
-                        <i class="fas fa-book me-2"></i> প্রথম জামাত
-                    </button>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <button class="btn btn-primary w-100 py-3" onclick="showPage('class-page'); setCurrentClass('second')">
-                        <i class="fas fa-book-open me-2"></i> দ্বিতীয় জামাত
-                    </button>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <button class="btn btn-primary w-100 py-3" onclick="showPage('class-page'); setCurrentClass('third')">
-                        <i class="fas fa-graduation-cap me-2"></i> তৃতীয় জামাত
-                    </button>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <button class="btn btn-primary w-100 py-3" onclick="showPage('class-page'); setCurrentClass('hifz')">
-                        <i class="fas fa-quran me-2"></i> হিফজ বিভাগ
-                    </button>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <button class="btn btn-success w-100 py-3" onclick="showPage('add-student-page')">
-                        <i class="fas fa-user-plus me-2"></i> Add Student
-                    </button>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <button class="btn btn-info w-100 py-3" onclick="showPage('fee-management-page')">
-                        <i class="fas fa-money-bill-wave me-2"></i> বেতন দিন
-                    </button>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <button class="btn btn-warning w-100 py-3" onclick="showPage('unpaid-students-page')">
-                        <i class="fas fa-exclamation-circle me-2"></i> Unpaid Students
-                    </button>
-                </div>
-                <div class="col-12 mb-3">
-                    <button class="btn btn-secondary w-100 py-3" onclick="showPage('today-fee-page')">
-                        <i class="fas fa-list-check me-2"></i> আজকে যারা বেতন দিয়েছেন
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Class Students Page -->
-        <div id="class-page" class="page">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 id="class-title">Class Students</h2>
-                <button class="btn btn-outline-primary" onclick="showPage('home-page')">
-                    <i class="fas fa-arrow-left me-1"></i> Back
-                </button>
-            </div>
-            
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>Student List</span>
-                    <div>
-                        <input type="text" id="class-search" class="form-control form-control-sm" placeholder="Search students..." oninput="searchStudents()">
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <ul id="class-students-list" class="list-group list-group-flush">
-                        <!-- Students will be loaded here -->
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Student Page -->
-        <div id="add-student-page" class="page">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Add New Student</h2>
-                <button class="btn btn-outline-primary" onclick="showPage('home-page')">
-                    <i class="fas fa-arrow-left me-1"></i> Back
-                </button>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    Student Information
-                </div>
-                <div class="card-body">
-                    <form id="add-student-form">
-                        <div class="mb-3">
-                            <label for="student-class" class="form-label">ক্লাস নির্ণয় করুন</label>
-                            <select class="form-select" id="student-class" required>
-                                <option value="" selected disabled>Select Class</option>
-                                <option value="shishu">শিশু জামাত</option>
-                                <option value="first">প্রথম জামাত</option>
-                                <option value="second">দ্বিতীয় জামাত</option>
-                                <option value="third">তৃতীয় জামাত</option>
-                                <option value="hifz">হিফজ বিভাগ</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="student-name" class="form-label">নাম</label>
-                            <input type="text" class="form-control" id="student-name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="father-name" class="form-label">পিতার নাম</label>
-                            <input type="text" class="form-control" id="father-name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="mother-name" class="form-label">মাতার নাম (Optional)</label>
-                            <input type="text" class="form-control" id="mother-name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="mobile-number" class="form-label">মোবাইল</label>
-                            <div class="input-group">
-                                <input type="tel" class="form-control" id="mobile-number" required>
-                                <button class="btn btn-outline-secondary" type="button" onclick="callStudent()">
-                                    <i class="fas fa-phone"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i> Submit
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Fee Management Page -->
-        <div id="fee-management-page" class="page">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Fee Management</h2>
-                <button class="btn btn-outline-primary" onclick="showPage('home-page')">
-                    <i class="fas fa-arrow-left me-1"></i> Back
-                </button>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    Payment Information
-                </div>
-                <div class="card-body">
-                    <form id="fee-form">
-                        <div class="mb-3">
-                            <label for="fee-class" class="form-label">ক্লাস নির্ণয় করুন</label>
-                            <select class="form-select" id="fee-class" required onchange="loadStudentsForFee()">
-                                <option value="" selected disabled>Select Class</option>
-                                <option value="shishu">শিশু জামাত</option>
-                                <option value="first">প্রথম জামাত</option>
-                                <option value="second">দ্বিতীয় জামাত</option>
-                                <option value="third">তৃতীয় জামাত</option>
-                                <option value="hifz">হিফজ বিভাগ</option>
-                            </select>
-                        </div>
-                        <div class="mb-3 search-container">
-                            <label for="student-search" class="form-label">নাম</label>
-                            <input type="text" class="form-control" id="student-search" placeholder="Search student..." required oninput="searchStudentForFee()">
-                            <div id="search-results" class="search-results"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="total-fee" class="form-label">মোট বেতন</label>
-                            <input type="number" class="form-control" id="total-fee" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="paid-amount" class="form-label">বর্তমান টাকা</label>
-                            <input type="number" class="form-control" id="paid-amount" required oninput="calculateDue()">
-                        </div>
-                        <div class="mb-3">
-                            <label for="due-amount" class="form-label">বকেয়া টাকা</label>
-                            <input type="number" class="form-control" id="due-amount" readonly>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-money-bill-wave me-1"></i> Submit Payment
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Unpaid Students Page -->
-        <div id="unpaid-students-page" class="page">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Unpaid Students</h2>
-                <button class="btn btn-outline-primary" onclick="showPage('home-page')">
-                    <i class="fas fa-arrow-left me-1"></i> Back
-                </button>
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="btn-group w-100" role="group">
-                        <button type="button" class="btn btn-outline-primary" onclick="showUnpaidStudents('shishu')">শিশু</button>
-                        <button type="button" class="btn btn-outline-primary" onclick="showUnpaidStudents('first')">প্রথম</button>
-                        <button type="button" class="btn btn-outline-primary" onclick="showUnpaidStudents('second')">দ্বিতীয়</button>
-                        <button type="button" class="btn btn-outline-primary" onclick="showUnpaidStudents('third')">তৃতীয়</button>
-                        <button type="button" class="btn btn-outline-primary" onclick="showUnpaidStudents('hifz')">হিফজ</button>
+                <div class="col-md-6 offset-md-3">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg mb-2" onclick="showClassList('shishu')">শিশু জামাত</button>
+                        <button class="btn btn-primary btn-lg mb-2" onclick="showClassList('first')">প্রথম জামাত</button>
+                        <button class="btn btn-primary btn-lg mb-2" onclick="showClassList('second')">দ্বিতীয় জামাত</button>
+                        <button class="btn btn-primary btn-lg mb-2" onclick="showClassList('third')">তৃতীয় জামাত</button>
+                        <button class="btn btn-primary btn-lg mb-2" onclick="showClassList('hifz')">হিফজ বিভাগ</button>
+                        <button class="btn btn-success btn-lg mb-2" onclick="showAddStudentForm()">Add Student</button>
+                        <button class="btn btn-warning btn-lg mb-2" onclick="showFeeForm()">বেতন দিন</button>
+                        <button class="btn btn-danger btn-lg mb-2" onclick="showUnpaidStudents()">Unpaid Student</button>
+                        <button class="btn btn-info btn-lg mb-2" onclick="showTodayPaidStudents()">আজকে যারা বেতন দিয়েছেন</button>
                     </div>
                 </div>
             </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <span id="unpaid-class-title">Unpaid Students</span>
-                </div>
-                <div class="card-body p-0">
-                    <ul id="unpaid-students-list" class="list-group list-group-flush">
-                        <!-- Unpaid students will be loaded here -->
-                    </ul>
-                </div>
-            </div>
         </div>
 
-        <!-- Today's Fee Records Page -->
-        <div id="today-fee-page" class="page">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Today's Fee Payments</h2>
-                <button class="btn btn-outline-primary" onclick="showPage('home-page')">
-                    <i class="fas fa-arrow-left me-1"></i> Back
-                </button>
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="btn-group w-100" role="group">
-                        <button type="button" class="btn btn-outline-primary" onclick="showTodayPayments('shishu')">শিশু</button>
-                        <button type="button" class="btn btn-outline-primary" onclick="showTodayPayments('first')">প্রথম</button>
-                        <button type="button" class="btn btn-outline-primary" onclick="showTodayPayments('second')">দ্বিতীয়</button>
-                        <button type="button" class="btn btn-outline-primary" onclick="showTodayPayments('third')">তৃতীয়</button>
-                        <button type="button" class="btn btn-outline-primary" onclick="showTodayPayments('hifz')">হিফজ</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <span id="today-class-title">Today's Payments</span>
-                </div>
-                <div class="card-body p-0">
-                    <ul id="today-payments-list" class="list-group list-group-flush">
-                        <!-- Today's payments will be loaded here -->
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Student Modal -->
-        <div class="modal fade" id="editStudentModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Student</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="edit-student-form">
-                            <input type="hidden" id="edit-student-id">
+        <!-- Add Student Form -->
+        <div id="add-student-page" class="hidden">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <button class="btn btn-secondary back-btn" onclick="backToHome()">← Back</button>
+                    <h2 class="page-title">নতুন ছাত্র যোগ করুন</h2>
+                    <div class="form-container">
+                        <form id="add-student-form">
                             <div class="mb-3">
-                                <label for="edit-student-class" class="form-label">Class</label>
-                                <select class="form-select" id="edit-student-class" required>
+                                <label for="student-class" class="form-label">ক্লাস নির্ণয় করুন</label>
+                                <select class="form-select" id="student-class" required>
+                                    <option value="" selected disabled>ক্লাস নির্বাচন করুন</option>
                                     <option value="shishu">শিশু জামাত</option>
                                     <option value="first">প্রথম জামাত</option>
                                     <option value="second">দ্বিতীয় জামাত</option>
@@ -448,99 +126,209 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="edit-student-name" class="form-label">নাম</label>
-                                <input type="text" class="form-control" id="edit-student-name" required>
+                                <label for="student-name" class="form-label">নাম</label>
+                                <input type="text" class="form-control" id="student-name" required>
                             </div>
                             <div class="mb-3">
-                                <label for="edit-father-name" class="form-label">পিতার নাম</label>
-                                <input type="text" class="form-control" id="edit-father-name" required>
+                                <label for="father-name" class="form-label">পিতার নাম</label>
+                                <input type="text" class="form-control" id="father-name" required>
                             </div>
                             <div class="mb-3">
-                                <label for="edit-mother-name" class="form-label">মাতার নাম (Optional)</label>
-                                <input type="text" class="form-control" id="edit-mother-name">
+                                <label for="mother-name" class="form-label">মাতার নাম (Optional)</label>
+                                <input type="text" class="form-control" id="mother-name">
                             </div>
                             <div class="mb-3">
-                                <label for="edit-mobile-number" class="form-label">মোবাইল</label>
-                                <input type="tel" class="form-control" id="edit-mobile-number" required>
+                                <label for="mobile-number" class="form-label">মোবাইল নাম্বার</label>
+                                <input type="tel" class="form-control" id="mobile-number" required>
                             </div>
+                            <button type="submit" class="btn btn-primary">সাবমিট</button>
                         </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="updateStudent()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class List Page -->
+        <div id="class-list-page" class="hidden">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <button class="btn btn-secondary back-btn" onclick="backToHome()">← Back</button>
+                    <h2 id="class-list-title" class="page-title"></h2>
+                    <div class="search-box">
+                        <input type="text" class="form-control" id="student-search" placeholder="ছাত্র খুঁজুন...">
                     </div>
+                    <div id="class-list-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fee Management Page -->
+        <div id="fee-page" class="hidden">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <button class="btn btn-secondary back-btn" onclick="backToHome()">← Back</button>
+                    <h2 class="page-title">বেতন প্রদান</h2>
+                    <div class="form-container">
+                        <form id="fee-form">
+                            <div class="mb-3">
+                                <label for="fee-class" class="form-label">ক্লাস নির্বাচন করুন</label>
+                                <select class="form-select" id="fee-class" required>
+                                    <option value="" selected disabled>ক্লাস নির্বাচন করুন</option>
+                                    <option value="shishu">শিশু জামাত</option>
+                                    <option value="first">প্রথম জামাত</option>
+                                    <option value="second">দ্বিতীয় জামাত</option>
+                                    <option value="third">তৃতীয় জামাত</option>
+                                    <option value="hifz">হিফজ বিভাগ</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="student-select" class="form-label">ছাত্র নির্বাচন করুন</label>
+                                <input type="text" class="form-control" id="student-select" placeholder="ছাত্রের নাম লিখুন" required>
+                                <div id="student-suggestions" class="list-group mt-2 hidden"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="total-fee" class="form-label">মোট বেতন</label>
+                                <input type="number" class="form-control" id="total-fee" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="paid-amount" class="form-label">বর্তমান টাকা</label>
+                                <input type="number" class="form-control" id="paid-amount" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="due-amount" class="form-label">বকেয়া টাকা</label>
+                                <input type="number" class="form-control" id="due-amount" readonly>
+                            </div>
+                            <button type="submit" class="btn btn-primary">সাবমিট</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unpaid Students Page -->
+        <div id="unpaid-page" class="hidden">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <button class="btn btn-secondary back-btn" onclick="backToHome()">← Back</button>
+                    <h2 class="page-title">বেতন বকেয়া ছাত্ররা</h2>
+                    <div class="d-flex mb-3">
+                        <button class="btn btn-primary me-2" onclick="showUnpaidClass('shishu')">শিশু জামাত</button>
+                        <button class="btn btn-primary me-2" onclick="showUnpaidClass('first')">প্রথম জামাত</button>
+                        <button class="btn btn-primary me-2" onclick="showUnpaidClass('second')">দ্বিতীয় জামাত</button>
+                        <button class="btn btn-primary me-2" onclick="showUnpaidClass('third')">তৃতীয় জামাত</button>
+                        <button class="btn btn-primary" onclick="showUnpaidClass('hifz')">হিফজ বিভাগ</button>
+                    </div>
+                    <div id="unpaid-list-container"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Today's Paid Students Page -->
+        <div id="today-paid-page" class="hidden">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <button class="btn btn-secondary back-btn" onclick="backToHome()">← Back</button>
+                    <h2 class="page-title">আজকে যারা বেতন দিয়েছেন</h2>
+                    <div class="d-flex mb-3">
+                        <button class="btn btn-primary me-2" onclick="showTodayPaidClass('shishu')">শিশু জামাত</button>
+                        <button class="btn btn-primary me-2" onclick="showTodayPaidClass('first')">প্রথম জামাত</button>
+                        <button class="btn btn-primary me-2" onclick="showTodayPaidClass('second')">দ্বিতীয় জামাত</button>
+                        <button class="btn btn-primary me-2" onclick="showTodayPaidClass('third')">তৃতীয় জামাত</button>
+                        <button class="btn btn-primary" onclick="showTodayPaidClass('hifz')">হিফজ বিভাগ</button>
+                    </div>
+                    <div id="today-paid-container"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Edit Student Modal -->
+    <div class="modal fade" id="editStudentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ছাত্র তথ্য সম্পাদনা</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-student-form">
+                        <input type="hidden" id="edit-student-id">
+                        <div class="mb-3">
+                            <label for="edit-student-name" class="form-label">নাম</label>
+                            <input type="text" class="form-control" id="edit-student-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-father-name" class="form-label">পিতার নাম</label>
+                            <input type="text" class="form-control" id="edit-father-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-mother-name" class="form-label">মাতার নাম</label>
+                            <input type="text" class="form-control" id="edit-mother-name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-mobile-number" class="form-label">মোবাইল নাম্বার</label>
+                            <input type="tel" class="form-control" id="edit-mobile-number" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
+                    <button type="button" class="btn btn-primary" onclick="updateStudent()">আপডেট</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteStudent()">ডিলিট</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Global variables
+        // Google Sheet API URL - Replace with your actual Google Apps Script URL
+        const API_URL = "https://script.google.com/macros/s/AKfycbwElAavjak1Qv8l8_CcnI4LTFL_6NCLHUcMqT_ZjZ861bB9BBWG6IBJ3024ZCcuuUbW/exec";
+        
+        // Current page state
+        let currentPage = 'home';
         let currentClass = '';
-        let currentStudentId = '';
-        let students = [];
-        let feeRecords = [];
-        let offlineData = {
-            students: [],
-            fees: []
-        };
-        
-        // Check if online
-        let isOnline = navigator.onLine;
-        updateOnlineStatus();
-        
-        // Event listeners for online/offline status
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
+        let studentsData = [];
+        let offlineData = JSON.parse(localStorage.getItem('offlineData')) || { students: [], fees: [] };
         
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            
-            // Form submit handlers
-            document.getElementById('add-student-form').addEventListener('submit', addStudent);
-            document.getElementById('fee-form').addEventListener('submit', submitFee);
-            
-            // Load today's date for fee records
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('fee-date').value = today;
-        });
-        
-        // Online status function
-        function updateOnlineStatus() {
-            isOnline = navigator.onLine;
-            const notification = document.querySelector('.offline-notification');
-            
-            if (!isOnline) {
-                notification.style.display = 'block';
-            } else {
-                notification.style.display = 'none';
+            // Check if online and sync offline data
+            if (navigator.onLine) {
                 syncOfflineData();
             }
+            
+            // Form submissions
+            document.getElementById('add-student-form').addEventListener('submit', addStudent);
+            document.getElementById('fee-form').addEventListener('submit', submitFee);
+            document.getElementById('student-search').addEventListener('input', searchStudents);
+            document.getElementById('student-select').addEventListener('input', searchStudentsForFee);
+            
+            // Calculate due amount automatically
+            document.getElementById('paid-amount').addEventListener('input', calculateDueAmount);
+            document.getElementById('total-fee').addEventListener('input', calculateDueAmount);
+        });
+        
+        // Navigation functions
+        function backToHome() {
+            document.getElementById(currentPage + '-page').classList.add('hidden');
+            document.getElementById('home-page').classList.remove('hidden');
+            currentPage = 'home';
         }
         
-        // Page navigation functions
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
-            
-            // Scroll to top when changing pages
-            window.scrollTo(0, 0);
-            
-            // Load specific data if needed
-            if (pageId === 'unpaid-students-page') {
-                showUnpaidStudents('shishu');
-            } else if (pageId === 'today-fee-page') {
-                showTodayPayments('shishu');
-            }
+        function showAddStudentForm() {
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('add-student-page').classList.remove('hidden');
+            currentPage = 'add-student';
+            document.getElementById('add-student-form').reset();
         }
         
-        function setCurrentClass(className) {
+        function showClassList(className) {
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('class-list-page').classList.remove('hidden');
+            currentPage = 'class-list';
             currentClass = className;
+            
+            // Set title based on class
             const classTitles = {
                 'shishu': 'শিশু জামাত',
                 'first': 'প্রথম জামাত',
@@ -548,88 +336,44 @@
                 'third': 'তৃতীয় জামাত',
                 'hifz': 'হিফজ বিভাগ'
             };
-            document.getElementById('class-title').textContent = classTitles[className] + ' Students';
-            loadClassStudents(className);
+            document.getElementById('class-list-title').textContent = classTitles[className];
+            
+            // Load students for this class
+            loadStudents(className);
         }
         
-        // Data loading functions
-        function loadData() {
-            // Load from localStorage
-            const savedStudents = localStorage.getItem('madrasaStudents');
-            const savedFees = localStorage.getItem('madrasaFeeRecords');
-            const savedOffline = localStorage.getItem('madrasaOfflineData');
-            
-            if (savedStudents) {
-                students = JSON.parse(savedStudents);
-            }
-            
-            if (savedFees) {
-                feeRecords = JSON.parse(savedFees);
-            }
-            
-            if (savedOffline) {
-                offlineData = JSON.parse(savedOffline);
-            }
-            
-            // In a real app, you would also load from Google Sheets here
+        function showFeeForm() {
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('fee-page').classList.remove('hidden');
+            currentPage = 'fee';
+            document.getElementById('fee-form').reset();
         }
         
-        function loadClassStudents(className) {
-            const classStudents = students.filter(student => student.class === className);
-            const listElement = document.getElementById('class-students-list');
-            listElement.innerHTML = '';
-            
-            if (classStudents.length === 0) {
-                listElement.innerHTML = '<li class="list-group-item text-center text-muted">No students found</li>';
-                return;
-            }
-            
-            // Sort by registration date (oldest first)
-            classStudents.sort((a, b) => new Date(a.registrationDate) - new Date(b.registrationDate));
-            
-            classStudents.forEach(student => {
-                // Calculate fee status
-                const studentFees = feeRecords.filter(fee => fee.studentId === student.id);
-                const totalPaid = studentFees.reduce((sum, fee) => sum + fee.amount, 0);
-                const monthsPaid = studentFees.length;
-                const monthsDue = calculateMonthsDue(student.registrationDate, monthsPaid);
-                
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item student-item';
-                listItem.innerHTML = `
-                    <div>
-                        <h5>${student.name}</h5>
-                        <p class="mb-1">পিতা: ${student.fatherName} | মোবাইল: <a href="tel:${student.mobile}">${student.mobile}</a></p>
-                        <div>
-                            <span class="badge rounded-pill bg-success">Paid: ${monthsPaid} months</span>
-                            <span class="badge rounded-pill bg-danger">Due: ${monthsDue} months</span>
-                            <span class="badge rounded-pill bg-primary">Total: ৳${totalPaid}</span>
-                        </div>
-                    </div>
-                    <div class="student-actions">
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editStudent('${student.id}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger me-1" onclick="deleteStudent('${student.id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-success" onclick="payFeeForStudent('${student.id}')">
-                            <i class="fas fa-money-bill"></i> Fee
-                        </button>
-                    </div>
-                `;
-                listElement.appendChild(listItem);
-            });
+        function showUnpaidStudents() {
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('unpaid-page').classList.remove('hidden');
+            currentPage = 'unpaid';
+            showUnpaidClass('shishu'); // Default to shishu class
         }
         
-        function calculateMonthsDue(registrationDate, monthsPaid) {
-            const regDate = new Date(registrationDate);
-            const now = new Date();
-            const monthsRegistered = (now.getFullYear() - regDate.getFullYear()) * 12 + (now.getMonth() - regDate.getMonth());
-            return Math.max(0, monthsRegistered - monthsPaid);
+        function showTodayPaidStudents() {
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('today-paid-page').classList.remove('hidden');
+            currentPage = 'today-paid';
+            showTodayPaidClass('shishu'); // Default to shishu class
         }
         
-        // Student CRUD functions
+        function showUnpaidClass(className) {
+            currentClass = className;
+            fetchUnpaidStudents(className);
+        }
+        
+        function showTodayPaidClass(className) {
+            currentClass = className;
+            fetchTodayPaidStudents(className);
+        }
+        
+        // Data functions
         function addStudent(e) {
             e.preventDefault();
             
@@ -639,41 +383,173 @@
             const motherName = document.getElementById('mother-name').value;
             const mobile = document.getElementById('mobile-number').value;
             
-            const newStudent = {
-                id: generateId(),
+            const studentData = {
                 class: studentClass,
                 name: name,
                 fatherName: fatherName,
                 motherName: motherName,
                 mobile: mobile,
-                registrationDate: new Date().toISOString()
+                timestamp: new Date().toISOString()
             };
             
-            if (isOnline) {
-                // In a real app, you would save to Google Sheets here
-                students.push(newStudent);
-                saveData();
+            if (navigator.onLine) {
+                // Online - send to Google Sheet
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'addStudent',
+                        data: studentData
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('ছাত্র সফলভাবে যোগ করা হয়েছে!');
+                        document.getElementById('add-student-form').reset();
+                    } else {
+                        alert('ত্রুটি: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Save to offline storage if online submission fails
+                    saveStudentOffline(studentData);
+                    alert('অনলাইন সংযোগ ব্যর্থ। ডাটা অফলাইনে সংরক্ষিত হয়েছে।');
+                });
             } else {
-                offlineData.students.push(newStudent);
-                saveOfflineData();
+                // Offline - save to localStorage
+                saveStudentOffline(studentData);
+                alert('আপনি অফলাইনে আছেন। ডাটা অফলাইনে সংরক্ষিত হয়েছে।');
             }
-            
-            // Reset form
-            e.target.reset();
-            
-            // Show success message
-            alert('Student added successfully!');
-            
-            // Return to home page
-            showPage('home-page');
         }
         
-        function editStudent(studentId) {
-            const student = students.find(s => s.id === studentId);
-            if (!student) return;
+        function saveStudentOffline(studentData) {
+            offlineData.students.push(studentData);
+            localStorage.setItem('offlineData', JSON.stringify(offlineData));
+        }
+        
+        function syncOfflineData() {
+            if (offlineData.students.length > 0) {
+                // Sync students
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'syncStudents',
+                        data: offlineData.students
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Clear synced students
+                        offlineData.students = [];
+                        localStorage.setItem('offlineData', JSON.stringify(offlineData));
+                    }
+                });
+            }
             
-            document.getElementById('edit-student-id').value = student.id;
-            document.getElementById('edit-student-class').value = student.class;
+            if (offlineData.fees.length > 0) {
+                // Sync fees
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'syncFees',
+                        data: offlineData.fees
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Clear synced fees
+                        offlineData.fees = [];
+                        localStorage.setItem('offlineData', JSON.stringify(offlineData));
+                    }
+                });
+            }
+        }
+        function loadStudents(className) {
+            if (navigator.onLine) {
+                fetch(API_URL + '?action=getStudents&class=' + className)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            studentsData = data.data;
+                            displayStudents(studentsData);
+                        } else {
+                            alert('ত্রুটি: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('ডাটা লোড করতে ব্যর্থ হয়েছে।');
+                    });
+            } else {
+                alert('আপনি অফলাইনে আছেন। শুধুমাত্র পূর্বে দেখা ডাটা দেখানো যাবে।');
+                // In a real app, you might cache data for offline viewing
+            }
+        }
+        
+        function displayStudents(students) {
+            const container = document.getElementById('class-list-container');
+            container.innerHTML = '';
+            
+            if (students.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">কোন ছাত্র পাওয়া যায়নি</div>';
+                return;
+            }
+            
+            students.forEach((student, index) => {
+                const card = document.createElement('div');
+                card.className = 'card mb-3 student-card';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${student.name}</h5>
+                        <p class="card-text">পিতার নাম: ${student.fatherName}</p>
+                        <p class="card-text">মোবাইল: <a href="tel:${student.mobile}">${student.mobile}</a></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-success">${student.paidMonths || 0} মাস বেতন</span>
+                                <span class="badge bg-danger unpaid-badge">${student.dueAmount || 0} টাকা বকেয়া</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-warning me-2" onclick="editStudent('${currentClass}', ${index})">Edit</button>
+                                <button class="btn btn-sm btn-primary" onclick="payFeeForStudent('${currentClass}', '${student.name}', '${student.fatherName}', '${student.mobile}')">Fee</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function searchStudents() {
+            const searchTerm = document.getElementById('student-search').value.toLowerCase();
+            if (!searchTerm) {
+                displayStudents(studentsData);
+                return;
+            }
+            
+            const filtered = studentsData.filter(student => 
+                student.name.toLowerCase().includes(searchTerm) || 
+                student.fatherName.toLowerCase().includes(searchTerm) ||
+                student.mobile.includes(searchTerm)
+            );
+            
+            displayStudents(filtered);
+        }
+        
+        function editStudent(className, index) {
+            const student = studentsData[index];
+            document.getElementById('edit-student-id').value = student.id || index;
             document.getElementById('edit-student-name').value = student.name;
             document.getElementById('edit-father-name').value = student.fatherName;
             document.getElementById('edit-mother-name').value = student.motherName || '';
@@ -684,414 +560,298 @@
         }
         
         function updateStudent() {
-            const studentId = document.getElementById('edit-student-id').value;
-            const studentIndex = students.findIndex(s => s.id === studentId);
+            const id = document.getElementById('edit-student-id').value;
+            const name = document.getElementById('edit-student-name').value;
+            const fatherName = document.getElementById('edit-father-name').value;
+            const motherName = document.getElementById('edit-mother-name').value;
+            const mobile = document.getElementById('edit-mobile-number').value;
             
-            if (studentIndex === -1) return;
-            
-            students[studentIndex] = {
-                ...students[studentIndex],
-                class: document.getElementById('edit-student-class').value,
-                name: document.getElementById('edit-student-name').value,
-                fatherName: document.getElementById('edit-father-name').value,
-                motherName: document.getElementById('edit-mother-name').value,
-                mobile: document.getElementById('edit-mobile-number').value
+            const updatedData = {
+                id: id,
+                class: currentClass,
+                name: name,
+                fatherName: fatherName,
+                motherName: motherName,
+                mobile: mobile
             };
             
-            if (isOnline) {
-                saveData();
+            if (navigator.onLine) {
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'updateStudent',
+                        data: updatedData
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('ছাত্রের তথ্য সফলভাবে আপডেট করা হয়েছে!');
+                        loadStudents(currentClass);
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editStudentModal'));
+                        modal.hide();
+                    } else {
+                        alert('ত্রুটি: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('আপডেট করতে ব্যর্থ হয়েছে।');
+                });
             } else {
-                // Find if this student exists in offline data
-                const offlineIndex = offlineData.students.findIndex(s => s.id === studentId);
-                if (offlineIndex !== -1) {
-                    offlineData.students[offlineIndex] = students[studentIndex];
-                } else {
-                    offlineData.students.push(students[studentIndex]);
-                }
-                saveOfflineData();
-            }
-            
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('editStudentModal'));
-            modal.hide();
-            
-            // Reload class students if we're on that page
-            if (document.getElementById('class-page').classList.contains('active')) {
-                loadClassStudents(currentClass);
+                alert('আপনি অফলাইনে আছেন। আপডেট করার জন্য অনলাইনে যান।');
             }
         }
         
-        function deleteStudent(studentId) {
-            if (!confirm('Are you sure you want to delete this student?')) return;
+        function deleteStudent() {
+            if (!confirm('আপনি কি নিশ্চিত এই ছাত্রকে ডিলিট করতে চান?')) return;
             
-            const studentIndex = students.findIndex(s => s.id === studentId);
-            if (studentIndex === -1) return;
+            const id = document.getElementById('edit-student-id').value;
             
-            if (isOnline) {
-                // In a real app, you would delete from Google Sheets here
-                students.splice(studentIndex, 1);
-                saveData();
+            if (navigator.onLine) {
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'deleteStudent',
+                        class: currentClass,
+                        id: id
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('ছাত্র সফলভাবে ডিলিট করা হয়েছে!');
+                        loadStudents(currentClass);
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editStudentModal'));
+                        modal.hide();
+                    } else {
+                        alert('ত্রুটি: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('ডিলিট করতে ব্যর্থ হয়েছে।');
+                });
             } else {
-                // Add to offline deletions
-                const student = students[studentIndex];
-                offlineData.students = offlineData.students.filter(s => s.id !== studentId);
-                saveOfflineData();
-                
-                // Remove from local students array
-                students.splice(studentIndex, 1);
-                localStorage.setItem('madrasaStudents', JSON.stringify(students));
+                alert('আপনি অফলাইনে আছেন। ডিলিট করার জন্য অনলাইনে যান।');
             }
-            
-            // Reload class students if we're on that page
-            if (document.getElementById('class-page').classList.contains('active')) {
-                loadClassStudents(currentClass);
-            }
+        }
+        
+        function payFeeForStudent(className, studentName, fatherName, mobile) {
+            showFeeForm();
+            document.getElementById('fee-class').value = className;
+            document.getElementById('student-select').value = studentName;
+            // In a real app, you would auto-fill other fields based on student data
         }
         
         // Fee management functions
-        function loadStudentsForFee() {
-            const className = document.getElementById('fee-class').value;
-            const studentSearch = document.getElementById('student-search');
-            studentSearch.value = '';
-            studentSearch.focus();
-        }
-        
-        function searchStudentForFee() {
-            const searchTerm = document.getElementById('student-search').value.toLowerCase();
-            const className = document.getElementById('fee-class').value;
+        function searchStudentsForFee() {
+            const searchTerm = document.getElementById('student-select').value.toLowerCase();
+            const classSelect = document.getElementById('fee-class').value;
             
-            if (!className) {
-                alert('Please select a class first');
+            if (!searchTerm || !classSelect) {
+                document.getElementById('student-suggestions').classList.add('hidden');
                 return;
             }
             
-            if (searchTerm.length < 2) {
-                document.getElementById('search-results').style.display = 'none';
-                return;
-            }
-            
-            const classStudents = students.filter(student => 
-                student.class === className && 
-                (student.name.toLowerCase().includes(searchTerm) || 
-                 student.fatherName.toLowerCase().includes(searchTerm))
+            // In a real app, you would fetch students matching the search term from the selected class
+            // For demo, we'll just show some dummy suggestions
+            const suggestions = [
+                { name: 'আব্দুল্লাহ আল মামুন', fatherName: 'মোঃ আব্দুল হাকিম', mobile: '01712345678' },
+                { name: 'মোহাম্মদ আলী', fatherName: 'মোঃ আব্দুল করিম', mobile: '01787654321' }
+            ].filter(s => 
+                s.name.toLowerCase().includes(searchTerm) || 
+                s.fatherName.toLowerCase().includes(searchTerm)
             );
             
-            const resultsContainer = document.getElementById('search-results');
-            resultsContainer.innerHTML = '';
+            const suggestionsContainer = document.getElementById('student-suggestions');
+            suggestionsContainer.innerHTML = '';
             
-            if (classStudents.length === 0) {
-                resultsContainer.innerHTML = '<div class="search-result-item">No students found</div>';
-            } else {
-                classStudents.forEach(student => {
-                    const resultItem = document.createElement('div');
-                    resultItem.className = 'search-result-item';
-                    resultItem.textContent = `${student.name} (পিতা: ${student.fatherName})`;
-                    resultItem.onclick = () => selectStudentForFee(student);
-                    resultsContainer.appendChild(resultItem);
-                });
+            if (suggestions.length === 0) {
+                suggestionsContainer.classList.add('hidden');
+                return;
             }
             
-            resultsContainer.style.display = 'block';
+            suggestions.forEach(student => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'list-group-item list-group-item-action';
+                item.innerHTML = `
+                    <div>${student.name}</div>
+                    <small class="text-muted">পিতা: ${student.fatherName}, মোবাইল: ${student.mobile}</small>
+                `;
+                item.onclick = function() {
+                    document.getElementById('student-select').value = student.name;
+                    suggestionsContainer.classList.add('hidden');
+                    // In a real app, you would auto-fill other student details
+                };
+                suggestionsContainer.appendChild(item);
+            });
+            
+            suggestionsContainer.classList.remove('hidden');
         }
         
-        function selectStudentForFee(student) {
-            document.getElementById('student-search').value = `${student.name} (পিতা: ${student.fatherName})`;
-            document.getElementById('search-results').style.display = 'none';
-            
-            // Calculate fee status
-            const studentFees = feeRecords.filter(fee => fee.studentId === student.id);
-            const monthsPaid = studentFees.length;
-            const monthsDue = calculateMonthsDue(student.registrationDate, monthsPaid);
-            
-            // Set values
-            currentStudentId = student.id;
-            document.getElementById('total-fee').value = monthsDue * 500; // Assuming 500 is monthly fee
-            document.getElementById('paid-amount').value = '';
-            document.getElementById('due-amount').value = monthsDue * 500;
-        }
-        
-        function calculateDue() {
-            const total = parseFloat(document.getElementById('total-fee').value) || 0;
-            const paid = parseFloat(document.getElementById('paid-amount').value) || 0;
-            document.getElementById('due-amount').value = Math.max(0, total - paid);
+        function calculateDueAmount() {
+            const totalFee = parseFloat(document.getElementById('total-fee').value) || 0;
+            const paidAmount = parseFloat(document.getElementById('paid-amount').value) || 0;
+            const dueAmount = totalFee - paidAmount;
+            document.getElementById('due-amount').value = dueAmount.toFixed(2);
         }
         
         function submitFee(e) {
             e.preventDefault();
             
-            if (!currentStudentId) {
-                alert('Please select a student first');
-                return;
-            }
-            
             const className = document.getElementById('fee-class').value;
-            const amount = parseFloat(document.getElementById('paid-amount').value);
+            const studentName = document.getElementById('student-select').value;
+            const totalFee = document.getElementById('total-fee').value;
+            const paidAmount = document.getElementById('paid-amount').value;
+            const dueAmount = document.getElementById('due-amount').value;
             
-            if (!amount || amount <= 0) {
-                alert('Please enter a valid amount');
-                return;
-            }
-            
-            const newFee = {
-                id: generateId(),
-                studentId: currentStudentId,
+            const feeData = {
                 class: className,
-                amount: amount,
+                studentName: studentName,
+                totalFee: totalFee,
+                paidAmount: paidAmount,
+                dueAmount: dueAmount,
                 paymentDate: new Date().toISOString()
             };
             
-            if (isOnline) {
-                // In a real app, you would save to Google Sheets here
-                feeRecords.push(newFee);
-                saveData();
+            if (navigator.onLine) {
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'submitFee',
+                        data: feeData
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('বেতন সফলভাবে জমা দেওয়া হয়েছে!');
+                        document.getElementById('fee-form').reset();
+                    } else {
+                        alert('ত্রুটি: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Save to offline storage if online submission fails
+                    saveFeeOffline(feeData);
+                    alert('অনলাইন সংযোগ ব্যর্থ। ডাটা অফলাইনে সংরক্ষিত হয়েছে।');
+                });
             } else {
-                offlineData.fees.push(newFee);
-                saveOfflineData();
+                // Offline - save to localStorage
+                saveFeeOffline(feeData);
+                alert('আপনি অফলাইনে আছেন। ডাটা অফলাইনে সংরক্ষিত হয়েছে।');
             }
-            
-            // Reset form
-            e.target.reset();
-            currentStudentId = '';
-            
-            // Show success message
-            alert('Fee payment recorded successfully!');
-            
-            // Return to home page
-            showPage('home-page');
         }
         
-        function payFeeForStudent(studentId) {
-            showPage('fee-management-page');
-            currentStudentId = studentId;
-            
-            const student = students.find(s => s.id === studentId);
-            if (!student) return;
-            
-            // Set class
-            document.getElementById('fee-class').value = student.class;
-            
-            // Set student name
-            document.getElementById('student-search').value = `${student.name} (পিতা: ${student.fatherName})`;
-            
-            // Calculate fee status
-            const studentFees = feeRecords.filter(fee => fee.studentId === student.id);
-            const monthsPaid = studentFees.length;
-            const monthsDue = calculateMonthsDue(student.registrationDate, monthsPaid);
-            
-            // Set values
-            document.getElementById('total-fee').value = monthsDue * 500; // Assuming 500 is monthly fee
-            document.getElementById('paid-amount').value = '';
-            document.getElementById('due-amount').value = monthsDue * 500;
-            
-            // Focus on amount field
-            document.getElementById('paid-amount').focus();
+        function saveFeeOffline(feeData) {
+            offlineData.fees.push(feeData);
+            localStorage.setItem('offlineData', JSON.stringify(offlineData));
         }
         
-        // Unpaid students functions
-        function showUnpaidStudents(className) {
-            const classStudents = students.filter(student => student.class === className);
-            const unpaidStudents = [];
-            
-            const classTitles = {
-                'shishu': 'শিশু জামাত',
-                'first': 'প্রথম জামাত',
-                'second': 'দ্বিতীয় জামাত',
-                'third': 'তৃতীয় জামাত',
-                'hifz': 'হিফজ বিভাগ'
-            };
-            
-            document.getElementById('unpaid-class-title').textContent = `Unpaid Students - ${classTitles[className]}`;
-            
-            classStudents.forEach(student => {
-                const studentFees = feeRecords.filter(fee => fee.studentId === student.id);
-                const monthsPaid = studentFees.length;
-                const monthsDue = calculateMonthsDue(student.registrationDate, monthsPaid);
-                
-                if (monthsDue > 0) {
-                    unpaidStudents.push({
-                        ...student,
-                        monthsDue: monthsDue,
-                        amountDue: monthsDue * 500 // Assuming 500 is monthly fee
+        function fetchUnpaidStudents(className) {
+            if (navigator.onLine) {
+                fetch(API_URL + '?action=getUnpaidStudents&class=' + className)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            displayUnpaidStudents(data.data);
+                        } else {
+                            alert('ত্রুটি: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('ডাটা লোড করতে ব্যর্থ হয়েছে।');
                     });
-                }
+            } else {
+                alert('আপনি অফলাইনে আছেন। শুধুমাত্র পূর্বে দেখা ডাটা দেখানো যাবে।');
+            }
+        }
+        
+        function displayUnpaidStudents(students) {
+            const container = document.getElementById('unpaid-list-container');
+            container.innerHTML = '';
+            
+            if (students.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">কোন বকেয়া ছাত্র পাওয়া যায়নি</div>';
+                return;
+            }
+            students.forEach(student => {
+                const card = document.createElement('div');
+                card.className = 'card mb-3';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${student.name}</h5>
+                        <p class="card-text">পিতার নাম: ${student.fatherName}</p>
+                        <p class="card-text">মোবাইল: <a href="tel:${student.mobile}">${student.mobile}</a></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-danger">${student.dueAmount || 0} টাকা বকেয়া</span>
+                            <button class="btn btn-sm btn-primary" onclick="payFeeForStudent('${currentClass}', '${student.name}', '${student.fatherName}', '${student.mobile}')">বেতন দিন</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
             });
+        }
+        
+        function fetchTodayPaidStudents(className) {
+            if (navigator.onLine) {
+                const today = new Date().toISOString().split('T')[0];
+                fetch(API_URL + '?action=getTodayPaidStudents&class=' + className + '&date=' + today)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            displayTodayPaidStudents(data.data);
+                        } else {
+                            alert('ত্রুটি: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('ডাটা লোড করতে ব্যর্থ হয়েছে।');
+                    });
+            } else {
+                alert('আপনি অফলাইনে আছেন। শুধুমাত্র পূর্বে দেখা ডাটা দেখানো যাবে।');
+            }
+        }
+        
+        function displayTodayPaidStudents(students) {
+            const container = document.getElementById('today-paid-container');
+            container.innerHTML = '';
             
-            const listElement = document.getElementById('unpaid-students-list');
-            listElement.innerHTML = '';
-            
-            if (unpaidStudents.length === 0) {
-                listElement.innerHTML = '<li class="list-group-item text-center text-muted">No unpaid students found</li>';
+            if (students.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">আজকে কেউ বেতন প্রদান করেনি</div>';
                 return;
             }
             
-            unpaidStudents.forEach(student => {
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item student-item';
-                listItem.innerHTML = `
-                    <div>
-                        <h5>${student.name}</h5>
-                        <p class="mb-1">পিতা: ${student.fatherName} | মোবাইল: <a href="tel:${student.mobile}">${student.mobile}</a></p>
-                        <div>
-                            <span class="badge rounded-pill bg-danger">Due: ${student.monthsDue} months (৳${student.amountDue})</span>
+            students.forEach(student => {
+                const card = document.createElement('div');
+                card.className = 'card mb-3';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${student.studentName}</h5>
+                        <p class="card-text">পিতার নাম: ${student.fatherName}</p>
+                        <p class="card-text">মোবাইল: <a href="tel:${student.mobile}">${student.mobile}</a></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-success">${student.paidAmount} টাকা প্রদান করেছেন</span>
+                            <small class="text-muted">${new Date(student.paymentDate).toLocaleString()}</small>
                         </div>
                     </div>
-                    <div class="student-actions">
-                        <button class="btn btn-sm btn-outline-success" onclick="payFeeForStudent('${student.id}')">
-                            <i class="fas fa-money-bill"></i> Pay Now
-                        </button>
-                    </div>
                 `;
-                listElement.appendChild(listItem);
+                container.appendChild(card);
             });
-        }
-        
-        // Today's payments functions
-        function showTodayPayments(className) {
-            const today = new Date().toISOString().split('T')[0];
-            const classPayments = feeRecords.filter(fee => 
-                fee.class === className && 
-                fee.paymentDate.startsWith(today)
-            );
-            
-            const classTitles = {
-                'shishu': 'শিশু জামাত',
-                'first': 'প্রথম জামাত',
-                'second': 'দ্বিতীয় জামাত',
-                'third': 'তৃতীয় জামাত',
-                'hifz': 'হিফজ বিভাগ'
-            };
-            
-            document.getElementById('today-class-title').textContent = `Today's Payments - ${classTitles[className]}`;
-            
-            const listElement = document.getElementById('today-payments-list');
-            listElement.innerHTML = '';
-            
-            if (classPayments.length === 0) {
-                listElement.innerHTML = '<li class="list-group-item text-center text-muted">No payments found for today</li>';
-                return;
-            }
-            
-            // Calculate total
-            const totalAmount = classPayments.reduce((sum, payment) => sum + payment.amount, 0);
-            
-            // Add total item
-            const totalItem = document.createElement('li');
-            totalItem.className = 'list-group-item bg-light';
-            totalItem.innerHTML = `<strong>Total: ৳${totalAmount} (${classPayments.length} payments)</strong>`;
-            listElement.appendChild(totalItem);
-            
-            // Add payment items
-            classPayments.forEach(payment => {
-                const student = students.find(s => s.id === payment.studentId);
-                if (!student) return;
-                
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item';
-                listItem.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6>${student.name}</h6>
-                            <p class="mb-0 small">পিতা: ${student.fatherName}</p>
-                        </div>
-                        <span class="badge bg-success rounded-pill">৳${payment.amount}</span>
-                    </div>
-                `;
-                listElement.appendChild(listItem);
-            });
-        }
-        
-        // Search functions
-        function searchStudents() {
-            const searchTerm = document.getElementById('class-search').value.toLowerCase();
-            const classStudents = students.filter(student => 
-                student.class === currentClass && 
-                (student.name.toLowerCase().includes(searchTerm) || 
-                 student.fatherName.toLowerCase().includes(searchTerm) ||
-                 student.mobile.includes(searchTerm))
-            );
-            
-            const listElement = document.getElementById('class-students-list');
-            listElement.innerHTML = '';
-            
-            if (classStudents.length === 0) {
-                listElement.innerHTML = '<li class="list-group-item text-center text-muted">No students found</li>';
-                return;
-            }
-            
-            classStudents.forEach(student => {
-                // Calculate fee status
-                const studentFees = feeRecords.filter(fee => fee.studentId === student.id);
-                const monthsPaid = studentFees.length;
-                const monthsDue = calculateMonthsDue(student.registrationDate, monthsPaid);
-                
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item student-item';
-                listItem.innerHTML = `
-                    <div>
-                        <h5>${student.name}</h5>
-                        <p class="mb-1">পিতা: ${student.fatherName} | মোবাইল: <a href="tel:${student.mobile}">${student.mobile}</a></p>
-                        <div>
-                            <span class="badge rounded-pill bg-success">Paid: ${monthsPaid} months</span>
-                            <span class="badge rounded-pill bg-danger">Due: ${monthsDue} months</span>
-                        </div>
-                    </div>
-                    <div class="student-actions">
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editStudent('${student.id}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger me-1" onclick="deleteStudent('${student.id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-success" onclick="payFeeForStudent('${student.id}')">
-                            <i class="fas fa-money-bill"></i> Fee
-                        </button>
-                    </div>
-                `;
-                listElement.appendChild(listItem);
-            });
-        }
-        
-        // Utility functions
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2);
-        }
-        
-        function callStudent() {
-            const mobile = document.getElementById('mobile-number').value;
-            if (mobile) {
-                window.open(`tel:${mobile}`);
-            }
-        }
-        
-        function saveData() {
-            localStorage.setItem('madrasaStudents', JSON.stringify(students));
-            localStorage.setItem('madrasaFeeRecords', JSON.stringify(feeRecords));
-            
-            // In a real app, you would sync with Google Sheets here
-        }
-        
-        function saveOfflineData() {
-            localStorage.setItem('madrasaOfflineData', JSON.stringify(offlineData));
-        }
-        
-        function syncOfflineData() {
-            if (offlineData.students.length > 0 || offlineData.fees.length > 0) {
-                // In a real app, you would sync with Google Sheets here
-                // For now, we'll just move the data to the main arrays
-                students = [...students, ...offlineData.students];
-                feeRecords = [...feeRecords, ...offlineData.fees];
-                
-                saveData();
-                
-                // Clear offline data
-                offlineData = {
-                    students: [],
-                    fees: []
-                };
-                saveOfflineData();
-                
-                alert('Offline data has been synced!');
-            }
         }
     </script>
 </body>
